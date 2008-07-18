@@ -1,0 +1,49 @@
+﻿<html>
+	<title>认证授权</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link href="/css/common.css" rel="stylesheet" type="text/css" />
+	<script src="js/AIRAliases.js" type="text/javascript"></script>
+<!--	<script src="js/AIRIntrospector.js" type="text/javascript"></script>-->
+	<script src="js/sha1.js" type="text/javascript"></script>
+	<script src="js/oauth.js" type="text/javascript"></script>
+	<script src="js/mootools-1.2-core.js" type="text/javascript"></script>
+	<script src="js/douban.js" type="text/javascript"></script>
+	<script src="js/api-key.js" type="text/javascript"></script>
+	<script>
+		window.addEvent('domready', function() {
+			var requestToken = air.EncryptedLocalStore.getItem("requestToken")
+			var requestTokenSecret = air.EncryptedLocalStore.getItem("requestTokenSecret")
+			var oauth = new Douban.OAuth({
+				apikey: Douban.apikey, 
+				secret: Douban.secret,
+				requestToken: requestToken.readUTFBytes(requestToken.length),
+				requestTokenSecret: requestTokenSecret.readUTFBytes(requestTokenSecret.length)
+			})
+			air.EncryptedLocalStore.reset();
+			
+			oauth.addEvent('accessToken', function(ro){
+				var f = function(prop) {
+					var bytes = new air.ByteArray();
+					bytes.writeUTFBytes(oauth.options[prop]);
+					air.EncryptedLocalStore.setItem(prop, bytes);		
+				}
+				f("accessToken");
+				f("accessTokenSecret");
+				f("userId");
+				
+				document.location = "/index.html"
+			})
+			oauth.addEvent('accessTokenFailure', function(){
+				$('nty').set('html', '确认授权失败, 也许你没有在弹出的页面中同意授权?<br/>')
+				$('nty').adopt([
+					new Element('button', {'html': '重新请求授权','events': {'click': function(){document.location='/requestToken.html'}}})
+				])
+			})
+			oauth.getAccessToken()
+		});
+	</script>
+	<body style="text-align:center;padding-top:100px;">
+		<img src="images/dblogo.gif" /><br/><br/>
+		<div class="nty" id="nty" style="width:300px">正在确认授权...</div><br/>
+	</body>
+</html>

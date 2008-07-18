@@ -1,0 +1,35 @@
+﻿<html>
+	<title>豆瓣收藏浏览器</title>
+	<link href="/css/common.css" rel="stylesheet" type="text/css" />
+	<script src="js/AIRAliases.js" type="text/javascript"></script>
+<!--	<script src="js/AIRIntrospector.js" type="text/javascript"></script>-->
+	<script src="js/sha1.js" type="text/javascript"></script>
+	<script src="js/oauth.js" type="text/javascript"></script>
+	<script src="js/mootools-1.2-core.js" type="text/javascript"></script>
+	<script src="js/douban.js" type="text/javascript"></script>
+	<script>
+		var oauth = null;
+		window.addEvent('domready', function() {
+			oauth = new Douban.OAuth({apikey: Douban.apikey, secret: Douban.secret})
+			oauth.getAccessTokenFromEncryptedLocalStore();		
+			if (oauth.isAuthenticated()) {
+				$("auth").setStyle('display', 'none');
+				$("revoke").setStyle('display', '');
+				$("enter").set('disabled', false);
+			}
+		})
+		
+		function revoke(){
+			oauth.revoke();
+			$("auth").setStyle('display', '');
+			$("revoke").setStyle('display', 'none');
+			$("enter").set('disabled', true);
+		}
+	</script>
+	<body style="text-align:center;padding-top:150px;">
+		<a href="#" onclick="air.navigateToURL(new air.URLRequest('http://www.douban.com'))"><img src="images/dblogo.gif" /><br/><br/></a>
+		<button id="auth" onclick="document.location='/requestToken.html'">获取授权</button>
+		<button id="revoke" onclick="revoke()" style="display:none">撤销授权</button>
+		<button id="enter" onclick="document.location='/book-collection.html'" disabled=true>我的收藏</button>
+	</body>
+</html>

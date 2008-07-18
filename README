@@ -1,0 +1,5 @@
+﻿演示在Ajax-based AIR环境下使用豆瓣API进行认证并获取用户收藏数据
+
+运行前到/js/api-key.js文件下，填写自己的豆瓣API Key和对应secret
+
+申请豆瓣API Key，在http://www.douban.com/service/apikey/apply

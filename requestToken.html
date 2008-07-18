@@ -1,0 +1,43 @@
+﻿<html>
+	<title>认证授权</title>
+	<link href="/css/common.css" rel="stylesheet" type="text/css" />
+	<script src="js/AIRAliases.js" type="text/javascript"></script>
+<!--	<script src="js/AIRIntrospector.js" type="text/javascript"></script>-->
+	<script src="js/sha1.js" type="text/javascript"></script>
+	<script src="js/oauth.js" type="text/javascript"></script>
+	<script src="js/mootools-1.2-core.js" type="text/javascript"></script>
+	<script src="js/douban.js" type="text/javascript"></script>
+	<script src="js/api-key.js" type="text/javascript"></script>
+	<script>
+		var auth_window = null;
+		
+		window.addEvent('domready', function() {
+			var oauth = new Douban.OAuth({apikey: Douban.apikey, secret: Douban.secret})
+			oauth.addEvent('requestToken', function(ro){
+				var f = function(prop) {
+					var bytes = new air.ByteArray();
+					bytes.writeUTFBytes(oauth.options[prop]);
+					air.EncryptedLocalStore.setItem(prop, bytes);		
+				}
+				f("requestToken");
+				f("requestTokenSecret");
+				
+				auth_window = window.open(oauth.getUserAuthorizationURL())
+				$('nty').set('html', '在弹出的页面中登录豆瓣并点击“同意”<br/>以同意授权本程序操作你的豆瓣数据<br/>完成后点击“完成授权”按钮继续')
+				$("acs-tkn").set('disabled', false);
+			})
+			oauth.addEvent('requestTokenFailure', function(){
+				$('nty').set('html', '请求授权失败, 也许是你的网络连接错误?<br/>')
+				$('nty').adopt([
+					new Element('button', {'html': '重新请求授权','events': {'click': function(){oauth.getRequestToken();}}})
+				])
+			})
+			oauth.getRequestToken()
+		});
+	</script>
+	<body style="text-align:center;padding-top:100px;">
+		<img src="images/dblogo.gif" /><br/><br/>
+		<div class="nty" id="nty" style="width:300px">正在请求授权...</div><br/>
+		<button id="acs-tkn" onclick="document.location='/accessToken.html';auth_window.close()" disabled=true>完成授权</button>
+	</body>
+</html>

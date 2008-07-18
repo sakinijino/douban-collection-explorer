@@ -1,0 +1,64 @@
+﻿<html>
+	<title>我收藏的音乐</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link href="/css/common.css" rel="stylesheet" type="text/css" />
+	<script src="js/AIRAliases.js" type="text/javascript"></script>
+<!--	<script src="js/AIRIntrospector.js" type="text/javascript"></script>-->
+	<script src="js/sha1.js" type="text/javascript"></script>
+	<script src="js/oauth.js" type="text/javascript"></script>
+	<script src="js/mootools-1.2-core.js" type="text/javascript"></script>
+	<script src="js/mootools-1.2-more.js" type="text/javascript"></script>
+	<script src="js/api-parser.js" type="text/javascript"></script>
+	<script src="js/douban.js" type="text/javascript"></script>
+	<script src="js/common.js" type="text/javascript"></script>
+		
+	<script>
+		var oauth, cusr, wall, tips;
+		window.addEvent('domready', function() {
+			oauth = new Douban.OAuth({apikey: Douban.apikey, secret: Douban.secret})
+			oauth.getAccessTokenFromEncryptedLocalStore();		
+			if (!oauth.isAuthenticated()) {
+				document.location = "/index.html"
+				return;
+			}
+			wall = new Wall($('content'))
+			var f = function(){
+				clnBtnClick($('readClnBtn'), {cat:'music', status:'listened'});
+			}
+			getCurrentUser(f);
+			
+			tips = new Tips('#content .subj', {hideDelay:1});
+			tips.addEvent('show', function(tip){
+				tip.fade('in');
+			});
+			tips.tip.addClass('subj_tip');
+		})
+	</script>
+	<body>
+		<div id="top">
+			<img id="cuicon" src="images/default_user.jpg" class="uicon"/>
+			<div id="ctlpal">
+				<span id="cuinfo"></span>
+				<br/>
+				<button id="readClnBtn" class="read" onclick="clnBtnClick(event.target, {cat:'music', status:'listened'})" disabled=true>听过的</button>
+				<button class="read" onclick="clnBtnClick(event.target, {cat:'music', status:'wish'})" disabled=true>想听的</button>
+				<button class="read" onclick="clnBtnClick(event.target, {cat:'music', status:'listening'})" disabled=true>在听的</button>
+			</div>
+			<div id="menu" >
+				<button onclick="document.location='/book-collection.html'">书籍</button>
+				<button onclick="document.location='/movie-collection.html'">电影</button>
+				<button onclick="document.location='/music-collection.html'" disabled=true>音乐</button>
+				<button onclick="document.location='/index.html'">首页</button>
+			</div>
+		</div>
+		<div id="content"></div>
+		<div id="footer">
+			<button id="refresh" onclick="wall.refresh()">重新排列</button>
+			<span id="paginate">
+				<button id="prev" disabled=true>向前</button>
+				<span id="pgtinfo"></span>
+				<button id="next" disabled=true>向后</button>
+			</span>
+		</div>
+	</body>
+</html>

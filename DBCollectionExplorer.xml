@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<application xmlns="http://ns.adobe.com/air/application/1.1">
+	<id>com.douban.sakinijino.clnepr</id>
+	<filename>豆瓣收藏浏览器</filename>
+	<name>豆瓣收藏浏览器</name>
+	<version>0.1</version>
+	<description>演示使用豆瓣API进行认证并获取用户收藏数据</description>
+
+	<initialWindow>
+		<content>index.html</content>
+		<title>豆瓣收藏浏览器</title>
+		<visible>true</visible>
+		<minimizable>true</minimizable>
+		<maximizable>false</maximizable>
+		<resizable>false</resizable>
+		<width>800</width>
+		<height>600</height>
+	</initialWindow>
+	
+	<installFolder>Douban/SakiNijino</installFolder>
+	<programMenuFolder>Douban</programMenuFolder>
+
+	<icon>
+		<image16x16>dbicon_tiny.png</image16x16>
+		<image32x32>dbicon_small.png</image32x32>
+		<image48x48>dbicon_middle.png</image48x48>
+		<image128x128>dbicon_large.png</image128x128>
+	</icon>
+	<allowBrowserInvocation>true</allowBrowserInvocation>
+</application>
